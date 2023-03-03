@@ -1,13 +1,14 @@
 import React from 'react'
-import { v4 as uuidv4 } from 'uuid';
 
 
-export const Table = ({taskList}) => {
-    const entryList = taskList.map((item) => 
-    {if (item.type === "entry"){
-        return item
-    }
-})
+export const Table = ({taskList, taskSwitcher, deleteBtn}) => {
+    const entryList = taskList.filter((item) => 
+   item.type === "entry")
+
+   const badList = taskList.filter((item)=>
+   item.type === "bad")
+    
+
 
 console.log(entryList)
 
@@ -19,14 +20,14 @@ console.log(entryList)
               <table class="table table-striped table-hover">
                 <tbody id="task-list">
                 {entryList.map((item, i)=>(
-                <tr>
+                <tr key={item.id}>
                 <td>{i + 1}</td>
                 <td>{item.task}</td>
                 <td>{item.hr} hr(s)</td>
                 <td>
-                <button onclick  class = "btn btn-danger"><i class = "fa-solid fa-trash"></i>
+                <button onClick ={()=> deleteBtn(item.id)}  class = "btn btn-danger"><i class = "fa-solid fa-trash"></i>
                 </button>
-                <button onclick ="markAsToDo(${i})" class = "btn btn-success"><i class = "fa-solid fa-right-long"></i>
+                <button onClick = {()=> taskSwitcher(item.id, "bad")} class = "btn btn-success"><i class = "fa-solid fa-right-long"></i>
                 </button>
                 </td>
                 </tr>))}
@@ -37,14 +38,27 @@ console.log(entryList)
               <h2 class="text-center">Bad List</h2>
               <hr />
               <table class="table table-striped table-hover">
-                <tbody id="bad-task">
-                    
+              <tbody id="bad-task">
+                {badList.map((item, i)=>(
+                <tr key={item.id}>
+                <td>{i + 1}</td>
+                <td>{item.task}</td>
+                <td>{item.hr} hr(s)</td>
+                <td>
+                <button onClick={()=> deleteBtn(item.id)}  class = "btn btn-danger"><i class = "fa-solid fa-trash"></i>
+                </button>
+                <button onClick = {()=> taskSwitcher(item.id, "entry")} class = "btn btn-success"><i class = "fa-solid fa-right-long"></i>
+                </button>
+                </td>
+                </tr>))}
+                </tbody>                    
                 
-                </tbody>
               </table>
 
               <div class="text-end fw-bold">
-                you can save <span id="totalBadHrs">0</span> Hours
+                you can save <span id="totalBadHrs">
+                  {badList.reduce((bttl, {hr})=> bttl + +hr, 0)}
+                  </span> Hours
               </div>
             </div>
           </div>

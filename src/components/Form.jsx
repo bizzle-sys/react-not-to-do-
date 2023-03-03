@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { randomStrGenerator } from './utils'
 
 export const Form = ({addTask}) => {
 const [formData, setFormData] = useState({
@@ -12,8 +13,8 @@ const handlelonChange = (e)=>{
 }
 const handleonSubmit = (e)=>{
     e.preventDefault()
-
-    addTask(formData)
+const id = randomStrGenerator(6)
+    addTask({...formData, id})
 
 }
 
